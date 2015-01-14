@@ -30,18 +30,19 @@ INCLUDE(configure.cmake)
 # Initializes block variables
 INIT_BIICODE_BLOCK()
 
-# Only interface lib, manual libraries
-SET(BII_LIB_SRC )
-
-ADD_BIICODE_TARGETS()
-
-
 ################### ssl lib target ##################################
 if( BUILD_SHARED_LIBS )
-    add_definitions ( -DOPENSSL_BUILD_SHLIBSSL )
+  add_definitions ( -DOPENSSL_BUILD_SHLIBSSL )
 endif()
 
-set (SSL_LIB_SOURCES  ssl/bio_ssl.c ssl/d1_lib.c ssl/d1_srvr.c ssl/s23_lib.c ssl/s2_clnt.c ssl/s2_pkt.c ssl/s3_clnt.c ssl/s3_pkt.c ssl/ssl_cert.c ssl/ssl_lib.c ssl/t1_clnt.c ssl/t1_reneg.c ssl/d1_both.c ssl/d1_meth.c ssl/heartbeat_test.c ssl/s23_meth.c ssl/s2_enc.c ssl/s2_srvr.c ssl/s3_enc.c ssl/s3_srvr.c ssl/ssl_ciph.c ssl/ssl_rsa.c ssl/ssltest.c ssl/t1_enc.c ssl/t1_srvr.c ssl/d1_clnt.c ssl/d1_pkt.c ssl/kssl.c ssl/s23_pkt.c ssl/s2_lib.c ssl/s3_both.c ssl/s3_lib.c ssl/ssl_algs.c ssl/ssl_err2.c ssl/ssl_sess.c ssl/ssl_txt.c ssl/t1_lib.c ssl/tls_srp.c ssl/d1_enc.c ssl/d1_srtp.c ssl/s23_clnt.c ssl/s23_srvr.c ssl/s2_meth.c ssl/s3_cbc.c ssl/s3_meth.c ssl/ssl_asn1.c ssl/ssl_err.c ssl/ssl_stat.c ssl/ssl_utst.c ssl/t1_meth.c )
+#MESSAGE(LIBSRC=${BII_LIB_SRC})
+
+set (ALL_SSL_LIB_SOURCES ssl/bio_ssl.c ssl/d1_lib.c ssl/d1_srvr.c ssl/s23_lib.c ssl/s2_clnt.c ssl/s2_pkt.c ssl/s3_clnt.c ssl/s3_pkt.c ssl/ssl_cert.c ssl/ssl_lib.c ssl/t1_clnt.c ssl/t1_reneg.c ssl/d1_both.c ssl/d1_meth.c ssl/heartbeat_test.c ssl/s23_meth.c ssl/s2_enc.c ssl/s2_srvr.c ssl/s3_enc.c ssl/s3_srvr.c ssl/ssl_ciph.c ssl/ssl_rsa.c ssl/ssltest.c ssl/t1_enc.c ssl/t1_srvr.c ssl/d1_clnt.c ssl/d1_pkt.c ssl/kssl.c ssl/s23_pkt.c ssl/s2_lib.c ssl/s3_both.c ssl/s3_lib.c ssl/ssl_algs.c ssl/ssl_err2.c ssl/ssl_sess.c ssl/ssl_txt.c ssl/t1_lib.c ssl/tls_srp.c ssl/d1_enc.c ssl/d1_srtp.c ssl/s23_clnt.c ssl/s23_srvr.c ssl/s2_meth.c ssl/s3_cbc.c ssl/s3_meth.c ssl/ssl_asn1.c ssl/ssl_err.c ssl/ssl_stat.c ssl/ssl_utst.c ssl/t1_meth.c )
+IF(BII_LIB_SRC)
+	INTERSECTION(SSL_LIB_SOURCES ALL_SSL_LIB_SOURCES BII_LIB_SRC)
+ELSE()
+	SET(SSL_LIB_SOURCES ${ALL_SSL_LIB_SOURCES})
+ENDIF()
 
 add_library(ssl_lib ${SSL_LIB_SOURCES})
 SET_TARGET_PROPERTIES(ssl_lib PROPERTIES COMPILE_DEFINITIONS "OPENSSL_NO_ASM")
@@ -55,7 +56,7 @@ SET_TARGET_PROPERTIES(crypto_lib PROPERTIES COMPILE_DEFINITIONS "OPENSSL_NO_ASM"
 
 # Actually create targets: EXEcutables and libraries.
 set (BII_apps_openssl_SRC main.cpp) #)apps/s_cb.c apps/openssl.c apps/verify.c apps/asn1pars.c apps/req.c apps/dgst.c apps/dh.c apps/dhparam.c apps/enc.c apps/passwd.c apps/gendh.c apps/errstr.c apps/ca.c apps/pkcs7.c apps/crl2p7.c apps/crl.c apps/rsa.c apps/rsautl.c apps/dsa.c apps/dsaparam.c apps/ec.c apps/ecparam.c apps/x509.c  apps/genrsa.c apps/gendsa.c apps/genpkey.c apps/speed.c apps/s_time.c apps/apps.c apps/s_socket.c apps/app_rand.c apps/version.c apps/sess_id.c apps/ciphers.c apps/nseq.c apps/pkcs12.c apps/pkcs8.c apps/pkey.c apps/pkeyparam.c apps/pkeyutl.c apps/spkac.c apps/smime.c apps/cms.c apps/rand.c apps/engine.c apps/ocsp.c apps/prime.c apps/ts.c apps/srp.c)
-set (apps_openssl_src # 
+set (ALL_APPS_OPENSSL_SRC # 
   apps/openssl.c apps/verify.c apps/asn1pars.c apps/req.c apps/dgst.c apps/dh.c apps/dhparam.c apps/enc.c apps/passwd.c apps/gendh.c apps/errstr.c
   apps/ca.c apps/pkcs7.c apps/crl2p7.c apps/crl.c apps/rsa.c apps/rsautl.c apps/dsa.c apps/dsaparam.c apps/ec.c apps/ecparam.c apps/x509.c
   apps/genrsa.c apps/gendsa.c apps/genpkey.c apps/s_server.c apps/s_client.c apps/speed.c apps/s_time.c apps/apps.c apps/s_cb.c
@@ -63,7 +64,13 @@ set (apps_openssl_src #
   apps/pkeyparam.c apps/pkeyutl.c apps/spkac.c apps/smime.c apps/cms.c apps/rand.c apps/engine.c apps/ocsp.c apps/prime.c apps/ts.c
   apps/srp.c )
 
-ADD_EXECUTABLE(openssl ${apps_openssl_src} )
+IF(BII_LIB_SRC)
+	INTERSECTION(APPS_OPENSSL_SRC ALL_APPS_OPENSSL_SRC BII_LIB_SRC)
+ELSE()
+	SET(APPS_OPENSSL_SRC ${ALL_APPS_OPENSSL_SRC})
+ENDIF()
+
+ADD_EXECUTABLE(openssl ${ALL_APPS_OPENSSL_SRC} )
 TARGET_LINK_LIBRARIES(openssl crypto_lib ssl_lib )
 
 TARGET_INCLUDE_DIRECTORIES(openssl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/openssl)
@@ -85,6 +92,12 @@ endif()
 if( MINGW )
   set( CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all" )
 endif()
+
+# Only interface lib, manual libraries
+SET(BII_LIB_SRC )
+
+ADD_BIICODE_TARGETS()
+
 
 TARGET_LINK_LIBRARIES(${BII_BLOCK_TARGET} INTERFACE ssl_lib)
 TARGET_LINK_LIBRARIES(${BII_BLOCK_TARGET} INTERFACE crypto_lib)

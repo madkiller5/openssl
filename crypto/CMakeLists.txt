@@ -24,7 +24,7 @@
 # SOFTWARE.
 
 include( CMakeParseArguments )
-set( LIBSRC cryptlib.c mem.c mem_clr.c mem_dbg.c cversion.c ex_data.c cpt_err.c
+set( ALL_LIBSRC cryptlib.c mem.c mem_clr.c mem_dbg.c cversion.c ex_data.c cpt_err.c
   ebcdic.c uid.c o_time.c o_str.c o_dir.c o_init.c )
 
 if( BUILD_SHARED_LIBS )
@@ -40,7 +40,7 @@ macro( add_submodule dir )
     #message( STATUS "{dir} ${dir}" )
     #message( STATUS "{add_submodule_UNPARSED_ARGUMENTS} ${add_submodule_UNPARSED_ARGUMENTS}" )
     foreach( name ${add_submodule_UNPARSED_ARGUMENTS} )
-        set( LIBSRC ${LIBSRC} ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/${name} )
+        set( ALL_LIBSRC ${ALL_LIBSRC} ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/${name} )
     endforeach( name )
 
     #message( STATUS "{add_submodule_EXHEADERS} ${add_submodule_EXHEADERS}" )
@@ -182,6 +182,12 @@ add_submodule ( x509v3 v3_bcons.c v3_bitst.c v3_conf.c v3_extku.c v3_ia5.c v3_li
 
 add_submodule ( . o_fips.c EXHEADERS crypto.h opensslv.h opensslconf.h ebcdic.h symhacks.h
   ossl_typ.h )
+
+IF(BII_LIB_SRC)
+  INTERSECTION(LIBSRC ALL_LIBSRC BII_LIB_SRC)
+ELSE()
+  SET(LIBSRC ${ALL_LIBSRC})
+ENDIF()
 
 add_library(crypto_lib ${LIBSRC} ${OBJECTS_SRC})
 

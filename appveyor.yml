@@ -1,15 +1,5 @@
 version: 1.0.{build}
 
-environment:
-  secured_passwd:
-    secure: lBislJUl6RP/4mh6NOGZcA==
-  project_name:
-    "myproject"
-  block_user:
-    "lasote"
-  block_name:
-    "openssl"
-
 install:
   - ps: wget https://s3.amazonaws.com/biibinaries/thirdparty/cmake-3.0.2-win32-x86.zip -OutFile cmake.zip
   - cmd: echo "Unzipping cmake..."
@@ -45,4 +35,18 @@ test_script:
 deploy_script:
   - cmd: bii user %block_user% -p %secured_passwd%
   - cmd: bii publish || dir # Ignore output
+
+environment:
+  secured_passwd:
+    secure: lBislJUl6RP/4mh6NOGZcA==
+  project_name:
+    "myproject"
+  block_user:
+    "lasote"
+  block_name:
+    "openssl"
+  BII_BLOCK_NUMFILES_LIMIT:
+    999999
+  BII_MAX_BLOCK_SIZE:
+    9999999999
 

@@ -12,6 +12,9 @@ Visual Studio 2012: [![Build status](https://ci.appveyor.com/api/projects/status
 
 Linux GCC: [![Build Status](https://travis-ci.org/lasote/openssl.svg?branch=OpenSSL_1_0_1-stable)](https://travis-ci.org/lasote/openssl)
 
+Clang on OSX
+
+
 ## How to use it?
 
 New with biicode? Check the [getting started guide](http://docs.biicode.com/c++/gettingstarted.html).

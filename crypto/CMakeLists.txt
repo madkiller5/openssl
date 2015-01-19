@@ -40,7 +40,7 @@ macro( add_submodule dir )
     #message( STATUS "{dir} ${dir}" )
     #message( STATUS "{add_submodule_UNPARSED_ARGUMENTS} ${add_submodule_UNPARSED_ARGUMENTS}" )
     foreach( name ${add_submodule_UNPARSED_ARGUMENTS} )
-        set( ALL_LIBSRC ${ALL_LIBSRC} ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/${name} )
+        set( ALL_LIBSRC ${ALL_LIBSRC} ${dir}/${name} )
     endforeach( name )
 
     #message( STATUS "{add_submodule_EXHEADERS} ${add_submodule_EXHEADERS}" )
@@ -49,6 +49,19 @@ macro( add_submodule dir )
     endforeach( name )
 
 endmacro( add_submodule )
+
+foreach( name ${BII_LIB_SRC} )
+    if(${name} MATCHES "engines/(.*)")
+      string(REPLACE "engines/" "../engines/" tmp ${name})
+      set(BII_LIB_SRC_RELATIVE ${BII_LIB_SRC_RELATIVE} ${tmp} )
+    elseif(${name} MATCHES "crypto/(.*)")
+      string(REPLACE "crypto/" "" tmp ${name})
+      set(BII_LIB_SRC_RELATIVE ${BII_LIB_SRC_RELATIVE} ${tmp} )
+    else()
+      set(BII_LIB_SRC_RELATIVE ${BII_LIB_SRC_RELATIVE} crypto/${name} )
+    endif()
+endforeach( name )
+
 
 add_submodule ( ../engines e_4758cca.c  e_gmp.c  e_padlock.c e_capi.c e_aep.c e_atalla.c e_cswift.c e_chil.c e_nuron.c e_sureware.c e_ubsec.c)
 add_submodule ( ../engines/ccgost e_gost_err.c gost2001.c gost2001_keyx.c gost89.c
@@ -183,24 +196,42 @@ add_submodule ( x509v3 v3_bcons.c v3_bitst.c v3_conf.c v3_extku.c v3_ia5.c v3_li
 add_submodule ( . o_fips.c EXHEADERS crypto.h opensslv.h opensslconf.h ebcdic.h symhacks.h
   ossl_typ.h )
 
-IF(BII_LIB_SRC)
-  INTERSECTION(LIBSRC ALL_LIBSRC BII_LIB_SRC)
+IF(BII_LIB_SRC_RELATIVE)
+  #MESSAGE("**************ALL CRYPTO:${BII_LIB_SRC_RELATIVE}")
+  INTERSECTION(CRYPTO_LIBSRC "${ALL_LIBSRC}" "${BII_LIB_SRC_RELATIVE}")
 ELSE()
-  SET(LIBSRC ${ALL_LIBSRC})
+  SET(CRYPTO_LIBSRC ${ALL_LIBSRC})
 ENDIF()
 
-add_library(crypto_lib ${LIBSRC} ${OBJECTS_SRC})
+IF(CRYPTO_LIBSRC)
+  add_library(crypto_lib ${CRYPTO_LIBSRC} ${OBJECTS_SRC})
 
-if( WIN32 AND NOT CYGWIN )
-  target_link_libraries( crypto_lib ws2_32 crypt32 )
-endif()
+  if( WIN32 AND NOT CYGWIN )
+    target_link_libraries( crypto_lib ws2_32 crypt32 )
+  endif()
 
-TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/../) # build/lasote/openssl/crypto/
-TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}) # lasote/openssl/crypto
-TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../) # lasote/openssl/
-TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include) # lasote/openssl/include
-TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include) # lasote/openssl/crypto/include
-TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}) # lasote/openssl/crypto
-TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/asn1) # lasote/openssl/crypto/asn1/asn1_locl.h
-TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/evp) # lasote/openssl/crypto/evp/evp_locl.h
-TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/modes) # lasote/openssl/crypto/modes/modes_lcl.h
+  TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/../) # build/lasote/openssl/crypto/
+  TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../) # lasote/openssl/
+  TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include) # lasote/openssl/include
+  TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include) # lasote/openssl/crypto/include
+  TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include/openssl) # lasote/openssl/crypto/include
+  TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}) # lasote/openssl/crypto
+  TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/asn1) # lasote/openssl/crypto/asn1/asn1_locl.h
+  TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/evp) # lasote/openssl/crypto/evp/evp_locl.h
+  TARGET_INCLUDE_DIRECTORIES(crypto_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/modes) # lasote/openssl/crypto/modes/modes_lcl.h
+
+  IF(WIN32)
+    MESSAGE(">>> WINDOWS <<<")
+	
+    IF(MINGW)
+      MESSAGE("-- WITH MINGW --")	  
+	  TARGET_COMPILE_OPTIONS(crypto_lib PUBLIC -D_M_IX86 -DOPENSSL_SYS_MSDOS -DOPENSSL_NO_ASM -DUNICODE -D_WINDLL -DOPENSSL_USE_APPLINK -D_MT)
+      SET_TARGET_PROPERTIES(crypto_lib PROPERTIES COMPILE_FLAGS "-fomit-frame-pointer -O3 -march=i486 -Wall")
+	  
+    ELSEIF(MSVC) # VISUAL?
+	  TARGET_COMPILE_OPTIONS(crypto_lib PUBLIC -DWIN32_LEAN_AND_MEAN)
+    ENDIF()
+  ELSE()
+    SET_TARGET_PROPERTIES(crypto_lib PROPERTIES COMPILE_DEFINITIONS "OPENSSL_NO_ASM")
+  ENDIF()
+ENDIF()

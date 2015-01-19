@@ -9,8 +9,8 @@ environment:
     "lasote"
   block_name:
     "openssl"
-  exe_name:
-    "bin/lasote_openssl_main.exe"
+  test_command:
+    "echo Myword | openssl.exe enc -base64 | findstr /I TXl3b3"
 
 install:
   - ps: wget https://s3.amazonaws.com/biibinaries/thirdparty/cmake-3.0.2-win32-x86.zip -OutFile cmake.zip
@@ -40,7 +40,8 @@ build_script:
   - cmd: bii cpp:build
 
 test_script:
-  - cmd: dir %exe_name%
+  - cmd: cd bin
+  - cmd: %test_command%
 
 # to run your custom scripts instead of provider deployments
 deploy_script:

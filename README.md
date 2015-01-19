@@ -8,11 +8,14 @@ The source code if this block (entirely) is on this github fork of openssl (on b
 Tested on:
 
 
-Visual Studio 2012: [![Build status](https://ci.appveyor.com/api/projects/status/ascl63fq0dpjv7c8?svg=true)](https://ci.appveyor.com/project/lasote/openssl)
+Windows Visual Studio 2012: [![Build status](https://ci.appveyor.com/api/projects/status/ascl63fq0dpjv7c8?svg=true)](https://ci.appveyor.com/project/lasote/openssl)
+
+Windows MinGW
 
 Linux GCC: [![Build Status](https://travis-ci.org/lasote/openssl.svg?branch=OpenSSL_1_0_1-stable)](https://travis-ci.org/lasote/openssl)
 
 Clang on OSX
+
 
 
 ## How to use it?

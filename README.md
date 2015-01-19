@@ -37,7 +37,7 @@ Open **biicode.conf** file and put a requirement to this block:
 
     [requirements]
     # This file contains your block external dependencies references
-    lasote/openssl: 1
+    lasote/openssl: 0
 
 
 Program your code and build it: 

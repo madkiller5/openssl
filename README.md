@@ -1,5 +1,7 @@
 ## OpenSSL 1.0.1l
 
+[![Build Status](https://webapi.biicode.com/v1/badges/lasote/lasote/openssl/master)](https://www.biicode.com/lasote/openssl) 
+
 The source code if this block (entirely) is on this github fork of openssl (on branch **OpenSSL_1_0_1-stable**)
 
 [https://github.com/lasote/openssl.git ](https://github.com/lasote/openssl.git )

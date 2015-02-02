@@ -1,6 +1,6 @@
 ##  OpenSSL 1.0.2 22 Jan 2015
 
-[![Build Status](https://webapi.biicode.com/v1/badges/lasote/lasote/openssl/master)](https://www.biicode.com/lasote/openssl) 
+[![Build Status](https://webapi.biicode.com/v1/badges/lasote/lasote/openssl/v1.0.2)](https://www.biicode.com/lasote/lasote/openssl/v1.0.2) 
 
 The source code if this block (entirely) is on this github fork of openssl (on branch **OpenSSL_1_0_2_biicode**)
 

@@ -1,4 +1,4 @@
-## OpenSSL 1.0.2
+##  OpenSSL 1.0.2 22 Jan 2015
 
 [![Build Status](https://webapi.biicode.com/v1/badges/lasote/lasote/openssl/master)](https://www.biicode.com/lasote/openssl) 
 

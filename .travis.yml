@@ -1,16 +1,14 @@
 language: cpp
-
 compiler:
 - gcc
 before_install:
-# g++
-- if [ "$CXX" == "g++" ]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; fi
+- if [ "$CXX" == "g++" ]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test;
+  fi
 - sudo apt-get update -qq
 install:
-# g++4.8.1
 - if [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-4.8; fi
-- if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50; fi
-
+- if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++
+  /usr/bin/g++-4.8 50; fi
 - wget http://www.biicode.com/downloads/latest/ubuntu64
 - mv ubuntu64 bii-ubuntu64.deb
 - sudo dpkg -i bii-ubuntu64.deb && sudo apt-get -f install
@@ -20,14 +18,11 @@ install:
 - sudo cp -fR cmake-3.0.2-Linux-64/* /usr
 - rm -rf cmake-3.0.2-Linux-64
 - rm cmake-3.0.2-Linux-64.tar.gz
-
-#Configure cmake compiler
 - export TRAVIS_CXX=$CXX
-
 script:
 - cmake --version
 - cd /tmp
-- bii init biicode_project 
+- bii init biicode_project
 - mkdir -p ./biicode_project/blocks/lasote/openssl
 - cd biicode_project/blocks/lasote/openssl
 - shopt -s dotglob && mv $TRAVIS_BUILD_DIR/* ./
@@ -41,6 +36,5 @@ after_success:
 - bii publish -r || echo "Ignored publish output..."
 env:
   global:
-    secure=cabgYGqj4LZ7hvmSPH+zPcu4CRF0YQpH5A+HZsMq6ObQU4pUBY7yTx53O0zwdfKiB6DdLsly12DLsepAzvIOKAHd1egfjhIl4TZtsDGSKmUAxS0boawspwIwj+aTfgKluNBcfV2CT56gHp+Fzi8FAudDYwKRw/BHS5EGOZ9QxTY=
-    BII_BLOCK_NUMFILES_LIMIT=99999
-    BII_MAX_BLOCK_SIZE=9999999999
+    BII_BLOCK_NUMFILES_LIMIT=99999 BII_MAX_BLOCK_SIZE=9999999999
+  - secure: MgLc00V1Mp7aPyN00KXg0yRwCL85asMkLwBiqRYbKn5qYDH8EbmkEj5xWbp8YwqRGqPrvCrR2ch7crBghFD9Xt1uWpM8ylXc0fWAqj6W7uCOQWCVsMP39eZWxGK1weOQcT21Mm0/y/vvKFfJT2qoYWsExSpxyj4iDOpcNA93p7s=

@@ -29,11 +29,12 @@ script:
 - cd /tmp
 - bii init biicode_project 
 - mkdir -p ./biicode_project/blocks/lasote/openssl
-- shopt -s dotglob && mv $TRAVIS_BUILD_DIR/* ./biicode_project/blocks/lasote/openssl
-- cd biicode_project
+- cd biicode_project/blocks/lasote/openssl
+- ./biicodizer.sh 
+- shopt -s dotglob && mv $TRAVIS_BUILD_DIR/* ./
 - if [ "$CXX" == "clang++" ]; then export CXX="clang++" && bii cpp:build; fi
 - if [ "$CXX" == "g++" ];     then export CXX="g++"     && bii cpp:build; fi
-- cd bin
+- cd /tmp/biicode_project/bin
 - echo Myword | ./openssl enc -base64 | grep "TXl3b3"
 after_success:
 - bii user lasote -p $BII_LASOTE_PASSWORD

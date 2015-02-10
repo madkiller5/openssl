@@ -5,7 +5,9 @@ before_install:
 - if [ "$CXX" == "g++" ]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test;
   fi
 - sudo apt-get update -qq
+- "export TRAVIS_COMMIT_MSG=\"$(git log --format=%B --no-merges -n 1)\""
 install:
+- if [[ "$TRAVIS_COMMIT_MSG" = "Promoted version" ]]; then exit(0) fi;
 - if [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-4.8; fi
 - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++
   /usr/bin/g++-4.8 50; fi
@@ -20,6 +22,7 @@ install:
 - rm cmake-3.0.2-Linux-64.tar.gz
 - export TRAVIS_CXX=$CXX
 script:
+- if [[ "$TRAVIS_COMMIT_MSG" = "Promoted version" ]]; then exit(0) fi;
 - cmake --version
 - cd /tmp
 - bii init biicode_project
@@ -35,6 +38,8 @@ after_success:
 - bii user $USER -p $BII_PASSWORD
 - if [[ -n $TRAVIS_TAG ]]; then bii publish -r --tag STABLE --versiontag $TRAVIS_TAG || echo "Ignored publish output..." ; fi
 - if [[ -z $TRAVIS_TAG ]]; then bii publish -r || echo "Ignored publish output..." ; fi
+# Re-publish if updated biicode.conf
+- if [[ -n $(git status --porcelain) ]]; then git commit -am "Promoted version" && git push ; fi
 env:
   global:
   - BII_BLOCK_NUMFILES_LIMIT=99999

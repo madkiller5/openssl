@@ -40,6 +40,7 @@ after_success:
 - if [[ -n $TRAVIS_TAG ]]; then bii publish -r --tag STABLE --versiontag $TRAVIS_TAG || echo "Ignored publish output..." ; fi
 - if [[ -z $TRAVIS_TAG ]]; then bii publish -r || echo "Ignored publish output..." ; fi
 # Re-publish if updated biicode.conf
+- cd /tmp/biicode_project/blocks/$USER/$BLOCK_NAME
 - if [[ -n $(git status --porcelain) ]]; then git commit -am "Promoted version" && git push ; fi
 env:
   global:

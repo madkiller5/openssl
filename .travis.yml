@@ -30,8 +30,8 @@ script:
 - bii init biicode_project 
 - mkdir -p ./biicode_project/blocks/lasote/openssl
 - cd biicode_project/blocks/lasote/openssl
-- ./biicodizer.sh 
 - shopt -s dotglob && mv $TRAVIS_BUILD_DIR/* ./
+- ./biicodizer.sh
 - if [ "$CXX" == "clang++" ]; then export CXX="clang++" && bii cpp:build; fi
 - if [ "$CXX" == "g++" ];     then export CXX="g++"     && bii cpp:build; fi
 - cd /tmp/biicode_project/bin

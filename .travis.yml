@@ -23,8 +23,8 @@ script:
 - cmake --version
 - cd /tmp
 - bii init biicode_project
-- mkdir -p ./biicode_project/blocks/lasote/openssl
-- cd biicode_project/blocks/lasote/openssl
+- mkdir -p ./biicode_project/blocks/$USER/$BLOCK_NAME
+- cd biicode_project/blocks/$USER/$BLOCK_NAME
 - shopt -s dotglob && mv $TRAVIS_BUILD_DIR/* ./
 - ./biicodizer.sh
 - if [ "$CXX" == "clang++" ]; then export CXX="clang++" && bii cpp:build; fi
@@ -32,10 +32,13 @@ script:
 - cd /tmp/biicode_project/bin
 - echo Myword | ./openssl enc -base64 | grep "TXl3b3"
 after_success:
-- bii user lasote -p $BII_LASOTE_PASSWORD
-- bii publish -r || git status || echo "Ignored publish output..."
+- bii user $USER -p $BII_PASSWORD
+- if [[ -n $TRAVIS_TAG ]]; then bii publish -r --tag STABLE --versiontag $TRAVIS_TAG || echo "Ignored publish output..." ; fi
+- if [[ -z $TRAVIS_TAG ]]; then bii publish -r || echo "Ignored publish output..." ; fi
 env:
   global:
   - BII_BLOCK_NUMFILES_LIMIT=99999
   - BII_MAX_BLOCK_SIZE=9999999999
-  - secure: CqW2RyTI7tA7RUKswVQsaSqQNL/y8z7Qn4HfEN0er4bb2cWVI23YFlJ+jpecOaxhD/0TJplC7CRFMqt18nngiS14v2ZdpdmRjowejY7h01dpsYb8bL0EWlOiJT2RF0KYX9oAv3+/zSaEcJC6bzj6Ba+nmthx+vkp5XoDmNPjvsc=
+  - BLOCK_NAME=openssl
+  - USER=lasote
+  - secure: ZRSV3VWjkGxA44JeBZRTHFc00JSP8SXUhQd/iBJpC8lv/YXYK2ivqF5nBz2rORUg9XZwm5EKwomr4GzuitnPeRmohwVLdH60QyE6iehfLHKRsBBkA+iMCcIolgwfA5ZLpqSiFNGzgg6KmChP/g55fXQ+eqbOTLYkespL+pRLB/M=

@@ -26,19 +26,18 @@ install:
 
 script:
 - cmake --version
-- bii init biicode_project
+- cd /tmp
+- bii init biicode_project 
 - mkdir -p ./biicode_project/blocks/lasote/openssl
-- mv !(biicode_project) ./biicode_project/blocks/lasote/openssl
-- cd ./biicode_project/blocks/lasote/openssl
-- ./biicodizer.sh # Copy headers to include/openssl
-- cd ../../../
+- shopt -s dotglob && mv $TRAVIS_BUILD_DIR/* ./biicode_project/blocks/lasote/openssl
+- cd biicode_project
 - if [ "$CXX" == "clang++" ]; then export CXX="clang++" && bii cpp:build; fi
 - if [ "$CXX" == "g++" ];     then export CXX="g++"     && bii cpp:build; fi
 - cd bin
 - echo Myword | ./openssl enc -base64 | grep "TXl3b3"
 after_success:
 - bii user lasote -p $BII_LASOTE_PASSWORD
-- bii publish || echo "Ignored publish output..."
+- bii publish -r || echo "Ignored publish output..."
 env:
   global:
     secure: cabgYGqj4LZ7hvmSPH+zPcu4CRF0YQpH5A+HZsMq6ObQU4pUBY7yTx53O0zwdfKiB6DdLsly12DLsepAzvIOKAHd1egfjhIl4TZtsDGSKmUAxS0boawspwIwj+aTfgKluNBcfV2CT56gHp+Fzi8FAudDYwKRw/BHS5EGOZ9QxTY=

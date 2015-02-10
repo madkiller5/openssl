@@ -33,11 +33,6 @@ test_script:
   - cmd: cd ../../../bin
   - cmd: echo Myword | openssl.exe enc -base64 | findstr /I TXl3b3
 
-# to run your custom scripts instead of provider deployments
-deploy_script:
-  - cmd: bii user %block_user% -p %secured_passwd%
-  - cmd: bii publish || dir # Ignore output
-
 environment:
   secured_passwd:
     secure: lBislJUl6RP/4mh6NOGZcA==

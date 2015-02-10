@@ -7,7 +7,7 @@ before_install:
 - sudo apt-get update -qq
 - "export TRAVIS_COMMIT_MSG=\"$(git log --format=%B --no-merges -n 1)\""
 install:
-- if [[ "$TRAVIS_COMMIT_MSG" = "Promoted version" ]]; then exit(0) fi;
+- if [[ "$TRAVIS_COMMIT_MSG" = "Promoted version" ]]; then exit 0 fi;
 - if [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-4.8; fi
 - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++
   /usr/bin/g++-4.8 50; fi
@@ -22,7 +22,7 @@ install:
 - rm cmake-3.0.2-Linux-64.tar.gz
 - export TRAVIS_CXX=$CXX
 script:
-- if [[ "$TRAVIS_COMMIT_MSG" = "Promoted version" ]]; then exit(0) fi;
+- if [[ "$TRAVIS_COMMIT_MSG" = "Promoted version" ]]; then exit 0 fi;
 - cmake --version
 - cd /tmp
 - bii init biicode_project

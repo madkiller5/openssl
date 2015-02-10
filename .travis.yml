@@ -36,5 +36,6 @@ after_success:
 - bii publish -r || echo "Ignored publish output..."
 env:
   global:
-    BII_BLOCK_NUMFILES_LIMIT=99999 BII_MAX_BLOCK_SIZE=9999999999
-  - secure: MgLc00V1Mp7aPyN00KXg0yRwCL85asMkLwBiqRYbKn5qYDH8EbmkEj5xWbp8YwqRGqPrvCrR2ch7crBghFD9Xt1uWpM8ylXc0fWAqj6W7uCOQWCVsMP39eZWxGK1weOQcT21Mm0/y/vvKFfJT2qoYWsExSpxyj4iDOpcNA93p7s=
+  - BII_BLOCK_NUMFILES_LIMIT=99999
+  - BII_MAX_BLOCK_SIZE=9999999999
+  - secure: CqW2RyTI7tA7RUKswVQsaSqQNL/y8z7Qn4HfEN0er4bb2cWVI23YFlJ+jpecOaxhD/0TJplC7CRFMqt18nngiS14v2ZdpdmRjowejY7h01dpsYb8bL0EWlOiJT2RF0KYX9oAv3+/zSaEcJC6bzj6Ba+nmthx+vkp5XoDmNPjvsc=

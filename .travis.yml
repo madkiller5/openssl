@@ -33,7 +33,7 @@ script:
 - echo Myword | ./openssl enc -base64 | grep "TXl3b3"
 after_success:
 - bii user lasote -p $BII_LASOTE_PASSWORD
-- bii publish -r || echo "Ignored publish output..."
+- bii publish -r || git status || echo "Ignored publish output..."
 env:
   global:
   - BII_BLOCK_NUMFILES_LIMIT=99999

@@ -123,7 +123,7 @@ add_submodule ( ecdsa ecs_lib.c ecs_asn1.c ecs_ossl.c ecs_sign.c ecs_vrf.c ecs_e
 add_submodule ( engine eng_err.c eng_lib.c eng_list.c eng_init.c eng_ctrl.c eng_table.c
   eng_pkey.c eng_fat.c eng_all.c tb_rsa.c tb_dsa.c tb_ecdsa.c tb_dh.c tb_ecdh.c tb_rand.c
   tb_store.c tb_cipher.c tb_digest.c tb_pkmeth.c tb_asnmth.c eng_openssl.c eng_cnf.c
-  eng_dyn.c eng_cryptodev.c eng_rdrand.c eng_rsax.c EXHEADERS engine.h )
+  eng_dyn.c eng_cryptodev.c eng_rdrand.c EXHEADERS engine.h )
 add_submodule ( err err.c err_all.c err_prn.c EXHEADERS err.h )
 add_submodule ( evp e_aes_cbc_hmac_sha256.c encode.c digest.c evp_enc.c evp_key.c evp_acnf.c e_des.c e_bf.c
   e_idea.c e_des3.c e_camellia.c e_rc4.c e_aes.c names.c e_seed.c e_xcbc_d.c e_rc2.c
